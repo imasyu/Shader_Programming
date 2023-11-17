@@ -9,12 +9,13 @@ Stage::Stage(GameObject* parent)
 
 void Stage::Initialize()
 {
-    hModel_ = Model::Load("Assets/Ball.fbx");
+    hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 }
 
 void Stage::Update()
 {
+    transform_.rotate_.y += 0.5f;
 }
 
 void Stage::Draw()

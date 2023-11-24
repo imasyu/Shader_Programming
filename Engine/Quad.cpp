@@ -167,7 +167,7 @@ HRESULT Quad::LoadTexture()
 	pTexture_ = new Texture;
 
 	HRESULT hr;
-	hr = pTexture_->Load("");
+	hr = pTexture_->Load("BallTexture.png");
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "テクスチャの作成に失敗しました", "エラー", MB_OK);

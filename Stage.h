@@ -5,6 +5,9 @@
 class Stage : public GameObject
 {
 	int hModel_; //モデル番号
+	int hBall_;
+	Transform ball_transform_;
+	int hArrow_[2];
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）

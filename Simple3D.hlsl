@@ -37,10 +37,12 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
 	outData.pos = mul(pos, matWVP);
+	//outData.pos = pos;
 	outData.uv = uv;
+	//outData.color = (1.0, 1.0, 1.0, 1.0);
 
 	normal = mul(normal, matNormal);
-	float4 light = float4(0, 1, -1, 0);
+	float4 light = float4(0, 1.5, 1, 0);
 	light = normalize(light);
 	outData.color = clamp(dot(normal, light), 0, 1);
 
@@ -54,7 +56,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
 	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);
-	float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);
+	float4 ambentSource = float4(0.1, 0.1, 0.1, 1.0);
 	float4 diffuse;
 	float4 ambient;
 	if (isTextured == false)

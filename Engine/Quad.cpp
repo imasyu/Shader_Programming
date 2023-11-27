@@ -184,6 +184,7 @@ void Quad::PassDataToCB(Transform transform)
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
+	cb.wSize = pTexture_->GetTextureSize();
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

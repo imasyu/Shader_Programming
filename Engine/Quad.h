@@ -13,6 +13,7 @@ struct CONSTANT_BUFFER
 {
 	XMMATRIX	matWVP;
 	XMMATRIX	matNormal; //matW‚©‚çNormal—p‚É‰ü–¼
+	XMFLOAT2    wSize;
 };
 
 struct VERTEX

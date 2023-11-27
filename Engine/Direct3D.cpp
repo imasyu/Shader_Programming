@@ -269,6 +269,8 @@ HRESULT Direct3D::InitShader3D()
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
+	rdc.ScissorEnable = false;
+	rdc.MultisampleEnable = false;
 	hr = pDevice_->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_3D].pRasterizerState_));
 	if (FAILED(hr))
 	{
@@ -338,6 +340,8 @@ HRESULT Direct3D::InitShader2D()
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
+	//rdc.ScissorEnable = false;
+	//rdc.MultisampleEnable = false;
 	hr = pDevice_->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_2D].pRasterizerState_));
 	if (FAILED(hr))
 	{

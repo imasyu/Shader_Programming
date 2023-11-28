@@ -34,16 +34,25 @@ void Stage::Initialize()
 void Stage::Update()
 {
     ball_transform_.position_.y = 1.5f;
-    a_transform_.position_.y = 3;
+    ball_transform_.position_.z = -1;
+    ball_transform_.scale_.x = 0.5f;
+    ball_transform_.scale_.y = 0.5f;
+    ball_transform_.scale_.z = 1.0f;
+
+    a_transform_.position_.y = 1;
+    a_transform_.position_.z = -3;
     a_transform_.scale_.x = 0.5f;
     a_transform_.scale_.y = 0.5f;
     a_transform_.scale_.z = 1.0f;
-    a_transform_.rotate_.x = 90.0f;
     a_transform_.rotate_.y = 90.0f;
-    a_transform_.rotate_.z = 0.0f;
+
+    b_transform_.position_.y = 2;
+    b_transform_.position_.z = -1;
     b_transform_.scale_.x = 0.5f;
     b_transform_.scale_.y = 0.5f;
     b_transform_.scale_.z = 1.0f;
+    b_transform_.rotate_.x = 90.0f;
+    b_transform_.rotate_.y = 90.0f;
 }
 
 void Stage::Draw()

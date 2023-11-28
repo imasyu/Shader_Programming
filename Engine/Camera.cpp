@@ -13,7 +13,7 @@ namespace Camera
 //初期化
 void Camera::Initialize()
 {
-	position_ = XMVectorSet(0, 3, -10, 0);	//カメラの位置
+	position_ = XMVectorSet(0, 8, -10, 0);	//カメラの位置
 	target_ = XMVectorSet(0, 0, 0, 0);	//カメラの焦点
 
 	//プロジェクション行列
@@ -47,6 +47,11 @@ void Camera::SetTarget(XMVECTOR target)
 void Camera::SetTarget(XMFLOAT3 target)
 {
 	SetTarget(XMLoadFloat3(&target));
+}
+
+XMVECTOR Camera::GetEyePosition()
+{
+	return GetEyePosition();
 }
 
 //ビュー行列を取得

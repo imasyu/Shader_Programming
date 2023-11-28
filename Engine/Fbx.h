@@ -24,16 +24,18 @@ class Fbx
 
 	struct CONSTANT_BUFFER
 	{
-		XMMATRIX	matWVP;
-		XMMATRIX	matNormal;
+		XMMATRIX	matWVP; //wvp
+		XMMATRIX	matNormal; //ワールド返還だけのやつ
 		XMFLOAT4    diffuseColor;
-		int         isTextured;
+		//XMFLOAT4    lightDirection;
+		//XMFLOAT4    eyePos;
+		BOOL         isTextured;
 	};
 
 	struct VERTEX
 	{
 		XMVECTOR position;  //位置
-		XMVECTOR uv;        //UV座標
+		XMVECTOR uv;        //テクスチャ座標
 		XMVECTOR normal;    
 	};
 

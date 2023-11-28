@@ -27,8 +27,8 @@ class Fbx
 		XMMATRIX	matWVP; //wvp
 		XMMATRIX	matNormal; //ÉèÅ[ÉãÉhï‘ä“ÇæÇØÇÃÇ‚Ç¬
 		XMFLOAT4    diffuseColor;
-		//XMFLOAT4    lightDirection;
-		//XMFLOAT4    eyePos;
+		XMFLOAT4    lightDirection;
+		XMFLOAT4    eyePos;
 		BOOL         isTextured;
 	};
 

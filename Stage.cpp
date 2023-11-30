@@ -16,7 +16,7 @@ void Stage::Initialize()
     hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 
-    hBall_ = Model::Load("Assets/Ball.fbx");
+    hBall_ = Model::Load("Assets/Ball2.fbx");
     assert(hBall_ >= 0);
 
     
@@ -60,8 +60,8 @@ void Stage::Draw()
 {
     //q->Draw(transform_);
 
-    Model::SetTransform(hModel_, transform_);
-    Model::Draw(hModel_);
+    //Model::SetTransform(hModel_, transform_);
+    //Model::Draw(hModel_);
 
     Model::SetTransform(hBall_, ball_transform_);
     Model::Draw(hBall_);

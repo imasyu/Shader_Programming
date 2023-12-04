@@ -11,8 +11,11 @@ SamplerState	g_sampler : register(s0);	//サンプラー
 cbuffer global
 {
 	float4x4	matWVP;			// ワールド・ビュー・プロジェクションの合成行列
+	float4x4    matW;           //ワールド行列
 	float4x4	matNormal;           // ワールド行列
-	float4      diffuseColor;        //ディフューズカラー（マテリアルの色）
+	float4      diffuseColor;        //マテリアルの色＝拡散反射係数
+	float4      lightPosition;
+	float4      eyePosition;
 	bool        isTextured;           //テクスチャ貼ってあるかどうか
 };
 
@@ -24,6 +27,8 @@ struct VS_OUT
 	float4 pos  : SV_POSITION;	//位置
 	float2 uv	: TEXCOORD;		//UV座標
 	float4 color	: COLOR;	//色（明るさ）
+	float4 eyev     :POSITION;
+	float4 normal   :NORMAL;
 };
 
 //───────────────────────────────────────
@@ -59,6 +64,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 ambentSource = float4(0.1, 0.1, 0.1, 1.0);
 	float4 diffuse;
 	float4 ambient;
+	float4 NL = normalize(2 * normalize * )
 	if (isTextured == false)
 	{
 		diffuse = lightSource * diffuseColor * inData.color;

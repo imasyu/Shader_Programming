@@ -241,6 +241,10 @@ void Fbx::Draw(Transform& transform)
 		CONSTANT_BUFFER cb;
 		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
+		cb.matW = XMMatrixTranspose(transform.GetNormalMatrix());
+		cb.diffuseColor = pMaterialList_[i].diffuse;
+		cb.lightPosition = lightSourcePosition_;
+		XMStoreFloat4(&cb.eyePos, Camera::GetEyePosition());
 		if (i == 1) {
 			cb.diffuseColor = XMFLOAT4(1,0,0,1);
 			cb.isTextured = pMaterialList_[i].pTexture != nullptr;

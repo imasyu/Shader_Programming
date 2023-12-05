@@ -16,7 +16,7 @@ void Stage::Initialize()
     hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 
-    hBall_ = Model::Load("Assets/Ball.fbx");
+    hBall_ = Model::Load("Assets/Ring.fbx");
     assert(hBall_ >= 0);
 
     
@@ -33,12 +33,12 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    ball_transform_.position_.x = -2;
+    /*ball_transform_.position_.x = -2;
     ball_transform_.position_.y = 1.5f;
     ball_transform_.position_.z = -1;
     ball_transform_.scale_.x = 0.5f;
     ball_transform_.scale_.y = 0.5f;
-    ball_transform_.scale_.z = 1.0f;
+    ball_transform_.scale_.z = 1.0f;*/
 
     a_transform_.position_.x = 2;
     a_transform_.position_.y = 1;

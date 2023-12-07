@@ -60,17 +60,17 @@ void Stage::Draw()
 {
     //q->Draw(transform_);
 
-    //Model::SetTransform(hModel_, transform_);
-    //Model::Draw(hModel_);
+    Model::SetTransform(hModel_, transform_);
+    Model::Draw(hModel_);
 
     Model::SetTransform(hBall_, ball_transform_);
     Model::Draw(hBall_);
 
-    Model::SetTransform(hArrow_[0], a_transform_);
-    Model::Draw(hArrow_[0]);
+    //Model::SetTransform(hArrow_[0], a_transform_);
+    //Model::Draw(hArrow_[0]);
 
-    Model::SetTransform(hArrow_[1], b_transform_);
-    Model::Draw(hArrow_[1]);
+    //Model::SetTransform(hArrow_[1], b_transform_);
+    //Model::Draw(hArrow_[1]);
 }
 
 void Stage::Release()

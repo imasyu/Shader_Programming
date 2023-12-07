@@ -40,7 +40,7 @@ struct VS_OUT
 VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 {
 	//ピクセルシェーダーへ渡す情報
-	VS_OUT outData;
+	VS_OUT outData = (VS_OUT)0;
 
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
@@ -52,7 +52,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	normal = normalize(normal);
 	outData.normal = normal;
 
-	float4 light = float4(0, 1.5, 1, 0);
+	float4 light = normalize(lightPosition);
 	light = normalize(light);
 
 	outData.color = saturate(dot(normal, light));
@@ -88,7 +88,7 @@ float4 PS(VS_OUT inData) : SV_Target
 		diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
 		ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambentSource;
 	}
-	return diffuse + ambient;
+	return diffuse + ambient + specular;
 }
 //return g_texture.Sample(g_sampler, inData.uv); // (diffuse + ambient);
 //float4 diffuse = lightSource * inData.color;

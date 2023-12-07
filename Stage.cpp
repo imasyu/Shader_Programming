@@ -60,8 +60,8 @@ void Stage::Draw()
 {
     //q->Draw(transform_);
 
-    Model::SetTransform(hModel_, transform_);
-    Model::Draw(hModel_);
+    //Model::SetTransform(hModel_, transform_);
+    //Model::Draw(hModel_);
 
     Model::SetTransform(hBall_, ball_transform_);
     Model::Draw(hBall_);

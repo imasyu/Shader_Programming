@@ -2,6 +2,12 @@
 #include "Engine/GameObject.h"
 #include "Engine/Quad.h"
 
+struct CBUFF_STAGE
+{
+	XMFLOAT4    lightPosition;
+	XMFLOAT4    eyePos;
+};
+
 //シーンを管理するクラス
 class Stage : public GameObject
 {
@@ -11,7 +17,10 @@ class Stage : public GameObject
 	int hArrow_[2];
 	Transform a_transform_;
 	Transform b_transform_;
+	ID3D11Buffer* pCBStageScene_;
 	//Quad* q;
+	void IntConstantBuffer();
+	XMFLOAT4    lightSourcePosition_;
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）
@@ -28,4 +37,7 @@ public:
 
 	//開放
 	void Release() override;
+
+	void SetLightPos(XMFLOAT4& _pos) { lightSourcePosition_ = _pos; }
+	XMFLOAT4 GetLightPos() { return (lightSourcePosition_); }
 };

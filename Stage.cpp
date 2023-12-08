@@ -3,8 +3,31 @@
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 
+namespace {
+    const XMFLOAT4 DEF_LIGHT_POSITION{1, 2, 1, 0};
+}
+
+void Stage::IntConstantBuffer()
+{
+    D3D11_BUFFER_DESC cb;
+    cb.ByteWidth = sizeof(CBUFF_STAGE);
+    cb.Usage = D3D11_USAGE_DEFAULT;
+    cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    cb.CPUAccessFlags = 0;
+    cb.MiscFlags = 0;
+    cb.StructureByteStride = 0;
+
+    //コンスタントバッファの作成
+    HRESULT hr;
+    hr = Direct3D::pDevice_->CreateBuffer(&cb, nullptr, &pCBStageScene_);
+    if (FAILED(hr))
+    {
+        MessageBox(NULL, "コンスタントバッファの作成に失敗しました", "エラー", MB_OK);
+    }
+}
+
 Stage::Stage(GameObject* parent)
-	:GameObject(parent, "Stage"), hModel_(-1), hBall_(-1), hArrow_{-1, -1}
+	:GameObject(parent, "Stage"), hModel_(-1), hBall_(-1), hArrow_{-1, -1}, lightSourcePosition_(DEF_LIGHT_POSITION)
 {
 }
 
@@ -27,18 +50,20 @@ void Stage::Initialize()
     hArrow_[1] = Model::Load("Assets/Arrow.fbx");
     assert(hArrow_[1] >= 0);
 
+    IntConstantBuffer();
+
     //Camera::SetPosition(XMVECTOR{ 0, 0, -5, 0 });
     //Camera::SetTarget(XMVECTOR{ 0, 0, 0, 0 });
 }
 
 void Stage::Update()
 {
-    /*ball_transform_.position_.x = -2;
+    ball_transform_.position_.x = -2;
     ball_transform_.position_.y = 1.5f;
     ball_transform_.position_.z = -1;
     ball_transform_.scale_.x = 0.5f;
     ball_transform_.scale_.y = 0.5f;
-    ball_transform_.scale_.z = 1.0f;*/
+    ball_transform_.scale_.z = 1.0f;
 
     a_transform_.position_.x = 2;
     a_transform_.position_.y = 1;
@@ -54,6 +79,15 @@ void Stage::Update()
     b_transform_.scale_.z = 1.0f;
     b_transform_.rotate_.x = 90.0f;
     b_transform_.rotate_.y = 90.0f;
+
+    CBUFF_STAGE cb;
+    cb.lightPosition = lightSourcePosition_;
+    XMStoreFloat4(&cb.eyePos, Camera::GetEyePosition());
+
+    Direct3D::pContext_->UpdateSubresource(pCBStageScene_, 0, NULL, &cb, 0, 0);
+
+    Direct3D::pContext_->VSSetConstantBuffers(1, 1, &pCBStageScene_);  //頂点シェーダー用
+    Direct3D::pContext_->PSSetConstantBuffers(1, 1, &pCBStageScene_);  //ピクセルシェーダー用
 }
 
 void Stage::Draw()

@@ -23,6 +23,7 @@ namespace Camera
 	void SetTarget(XMVECTOR target);
 	void SetTarget(XMFLOAT3 target);
 
+	//XMFLOATでもいい（もって来れれば）
 	XMVECTOR GetEyePosition();
 
 	//ビュー行列を取得

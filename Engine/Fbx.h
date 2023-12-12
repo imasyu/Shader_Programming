@@ -22,15 +22,15 @@ class Fbx
 		XMFLOAT4 diffuse;
 	};
 
-	struct CONSTANT_BUFFER
+	struct CBUFF_MODEL
 	{
 		XMMATRIX	matWVP; //wvp ワールドビュープロジェクション
 		XMMATRIX     matW; //W
 		XMMATRIX	matNormal; //スケール×平行移動の逆行列
 		XMFLOAT4    diffuseColor;//FBXからとってきた面の色
+		BOOL        isTextured;
 		//XMFLOAT4    lightPosition;
 		//XMFLOAT4    eyePos;
-		BOOL        isTextured;
 	};
 
 	struct VERTEX

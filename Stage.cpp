@@ -53,7 +53,7 @@ void Stage::Initialize()
 
     Camera::SetPosition(XMVECTOR{ 0, 10, -20, 0 });
     Camera::SetTarget(XMVECTOR{ 0, 2, 0, 0 });
-    trBall_.position_ = { -2,2,0 };
+    trBall_.position_ = { 0,1,0 };
     trBall_.rotate_ = { 0,0,0 };
     trBall_.scale_ = { 0.4,0.4,0.4 };
 
@@ -61,11 +61,11 @@ void Stage::Initialize()
     trLight_.rotate_ = { 0,0,0 };
     trLight_.scale_ = { 0.4,0.4,0.4 };
     
-    trArrow1_.position_ = { 0,4,-2 };
+    trArrow1_.position_ = { 0,0,0 };
     trArrow1_.rotate_ = { 90,90,0 };
     trArrow1_.scale_ = { 0.5,0.5,0.5 };
 
-    trArrow2_.position_ = { 2,2,-2 };
+    trArrow2_.position_ = { 2,-2,0 };
     trArrow2_.rotate_ = { 0,1,0 };
     trArrow2_.scale_ = { 0.5,0.5,0.5 };
 

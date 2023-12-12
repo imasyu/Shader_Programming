@@ -15,9 +15,10 @@ class Stage : public GameObject
 	int hBall_;
 	int hArrow_[2];
 	int hLightBall_;
-	Transform ball_transform_;
-	Transform a_transform_;
-	Transform b_transform_;
+	Transform trGround_;
+	Transform trBall_;
+	Transform trArrow1_;
+	Transform trArrow2_;
 	Transform trLight_;
 	ID3D11Buffer* pCBStageScene_;
 	//Quad* q;

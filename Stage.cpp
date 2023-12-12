@@ -39,10 +39,11 @@ void Stage::Initialize()
     hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 
-    hBall_ = Model::Load("Assets/Ball.fbx");
+    hBall_ = Model::Load("Assets/Ring.fbx");
     assert(hBall_ >= 0);
 
-    
+    hLightBall_ = Model::Load("Assets/Ball.fbx");
+    assert(hLightBall_ >= 0);
 
    hArrow_[0] = Model::Load("Assets/Arrow.fbx");
     assert(hArrow_[0] >= 0);
@@ -50,36 +51,73 @@ void Stage::Initialize()
     hArrow_[1] = Model::Load("Assets/Arrow.fbx");
     assert(hArrow_[1] >= 0);
 
-    IntConstantBuffer();
+    Camera::SetPosition(XMVECTOR{ 0, 10, -20, 0 });
+    Camera::SetTarget(XMVECTOR{ 0, 2, 0, 0 });
+    trBall_.position_ = { -2,2,0 };
+    trBall_.rotate_ = { 0,0,0 };
+    trBall_.scale_ = { 0.4,0.4,0.4 };
 
-    //Camera::SetPosition(XMVECTOR{ 0, 0, -5, 0 });
-    //Camera::SetTarget(XMVECTOR{ 0, 0, 0, 0 });
+    trLight_.position_ = { 0,0,0 };
+    trLight_.rotate_ = { 0,0,0 };
+    trLight_.scale_ = { 0.4,0.4,0.4 };
+    
+    trArrow1_.position_ = { 0,4,-2 };
+    trArrow1_.rotate_ = { 90,90,0 };
+    trArrow1_.scale_ = { 0.5,0.5,0.5 };
+
+    trArrow2_.position_ = { 2,2,-2 };
+    trArrow2_.rotate_ = { 0,1,0 };
+    trArrow2_.scale_ = { 0.5,0.5,0.5 };
+
+    IntConstantBuffer();
 }
 
 void Stage::Update()
 {
-    ball_transform_.position_.x = -2;
-    ball_transform_.position_.y = 1.5f;
-    ball_transform_.position_.z = -1;
-    ball_transform_.scale_.x = 0.5f;
-    ball_transform_.scale_.y = 0.5f;
-    ball_transform_.scale_.z = 1.0f;
-    //ball_transform_.rotate_.y += 0.3f;
+    if (Input::IsKey(DIK_RIGHT))
+    {
+        XMFLOAT4 p = GetLightPos();
+        XMFLOAT4 margin{ p.x + 0.1f,p.y + 0.0f,p.z + 0.0f,p.w + 0.0f };
 
-    a_transform_.position_.x = 2;
-    a_transform_.position_.y = 1;
-    a_transform_.position_.z = -1;
-    a_transform_.scale_.x = 0.5f;
-    a_transform_.scale_.y = 0.5f;
-    a_transform_.scale_.z = 1.0f;
+        SetLightPos(margin);
+    }
+    if (Input::IsKey(DIK_LEFT))
+    {
+        XMFLOAT4 p = GetLightPos();
+        XMFLOAT4 margin{ p.x - 0.1f,p.y - 0.0f,p.z - 0.0f,p.w - 0.0f };
 
-    b_transform_.position_.y = 3;
-    b_transform_.position_.z = -1.2;
-    b_transform_.scale_.x = 0.5f;
-    b_transform_.scale_.y = 0.5f;
-    b_transform_.scale_.z = 1.0f;
-    b_transform_.rotate_.x = 90.0f;
-    b_transform_.rotate_.y = 90.0f;
+        SetLightPos(margin);
+    }
+    if (Input::IsKey(DIK_UP))
+    {
+        XMFLOAT4 p = GetLightPos();
+        XMFLOAT4 margin{ p.x - 0.0f,p.y + 0.1f,p.z - 0.0f,p.w - 0.0f };
+
+        SetLightPos(margin);
+    }
+    if (Input::IsKey(DIK_DOWN))
+    {
+        XMFLOAT4 p = GetLightPos();
+        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.1f,p.z - 0.0f,p.w - 0.0f };
+
+        SetLightPos(margin);
+    }
+    if (Input::IsKey(DIK_W))
+    {
+        XMFLOAT4 p = GetLightPos();
+        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.0f,p.z + 0.1f,p.w - 0.0f };
+
+        SetLightPos(margin);
+    }
+    if (Input::IsKey(DIK_S))
+    {
+        XMFLOAT4 p = GetLightPos();
+        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.0f,p.z - 0.1f,p.w - 0.0f };
+
+        SetLightPos(margin);
+    }
+    XMFLOAT4 tmp{ GetLightPos() };
+    trLight_.position_ = { tmp.x,tmp.y,tmp.z };
 
     CBUFF_STAGE cb;
     cb.lightPosition = lightSourcePosition_;
@@ -98,13 +136,16 @@ void Stage::Draw()
     //Model::SetTransform(hModel_, transform_);
     //Model::Draw(hModel_);
 
-    Model::SetTransform(hBall_, ball_transform_);
+    Model::SetTransform(hBall_, trBall_);
     Model::Draw(hBall_);
 
-    Model::SetTransform(hArrow_[0], a_transform_);
+    Model::SetTransform(hLightBall_, trLight_);
+    Model::Draw(hLightBall_);
+
+    Model::SetTransform(hArrow_[0], trArrow1_);
     Model::Draw(hArrow_[0]);
 
-    Model::SetTransform(hArrow_[1], b_transform_);
+    Model::SetTransform(hArrow_[1], trArrow2_);
     Model::Draw(hArrow_[1]);
 }
 

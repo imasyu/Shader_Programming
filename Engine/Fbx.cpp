@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "Texture.h"
 
+const XMFLOAT4 LIGHT_POSITION{ 1, 2, 1, 0 };
+
 Fbx::Fbx()
 	:vertexCount_(0), polygonCount_(0), materialCount_(0),
 	pVertexBuffer_(nullptr), pIndexBuffer_(nullptr), pConstantBuffer_(nullptr), pMaterialList_(nullptr)
@@ -232,7 +234,11 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 
 void Fbx::Draw(Transform& transform)
 {
-	Direct3D::SetShader(SHADER_3D);
+	if (state_ == RENDRE_DIRLIGHT)
+		Direct3D::SetShader(SHADER_3D);
+	else
+		Direct3D::SetShader(SHADER_POINT);
+	
 	transform.Calclation();//トランスフォームを計算
 	
 	for (int i = 0; i < materialCount_; i++)

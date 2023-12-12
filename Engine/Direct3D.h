@@ -18,6 +18,7 @@ enum SHADER_TYPE
 	SHADER_2D,
 	SHADER_3D,
 	SHADER_MAX,
+	SHADER_POINT,
 };
 
 namespace Direct3D

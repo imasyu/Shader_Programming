@@ -13,10 +13,12 @@ class Stage : public GameObject
 {
 	int hModel_; //ÉÇÉfÉãî‘çÜ
 	int hBall_;
-	Transform ball_transform_;
 	int hArrow_[2];
+	int hLightBall_;
+	Transform ball_transform_;
 	Transform a_transform_;
 	Transform b_transform_;
+	Transform trLight_;
 	ID3D11Buffer* pCBStageScene_;
 	//Quad* q;
 	void IntConstantBuffer();

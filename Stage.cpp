@@ -27,7 +27,7 @@ void Stage::IntConstantBuffer()
 }
 
 Stage::Stage(GameObject* parent)
-	:GameObject(parent, "Stage"), hModel_(-1), hBall_(-1), hArrow_{-1, -1}, lightSourcePosition_(DEF_LIGHT_POSITION)
+	:GameObject(parent, "Stage"), hModel_(-1), hBall_(-1), hArrow_{-1, -1}, hLightBall_(-1), lightSourcePosition_(DEF_LIGHT_POSITION)
 {
 }
 
@@ -39,7 +39,7 @@ void Stage::Initialize()
     hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 
-    hBall_ = Model::Load("Assets/Ring.fbx");
+    hBall_ = Model::Load("Assets/Ball.fbx");
     assert(hBall_ >= 0);
 
     

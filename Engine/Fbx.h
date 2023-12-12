@@ -11,6 +11,12 @@
 
 using std::vector;
 
+enum RENDER_STATE
+{
+	RENDRE_DIRLIGHT,
+	RENDER_PNTLIGHT,
+};
+
 class Texture;
 
 class Fbx
@@ -54,16 +60,11 @@ class Fbx
 	void InitIndex(fbxsdk::FbxMesh* mesh);
 	void IntConstantBuffer();
 	void InitMaterial(fbxsdk::FbxNode* pNode);
-	bool IsFlatColor;
-	XMFLOAT4    dColor_;
-	XMFLOAT4    lightSourcePosition_;
+	RENDER_STATE state_;
 public:
 
 	Fbx();
-	void     SetFlatColor(XMFLOAT4 col);
 	HRESULT  Load(std::string fileName);
 	void     Draw(Transform& transform);
-	void     SetLightPos(XMFLOAT4& pos);
-	XMFLOAT4 GetLightPos() { return(lightSourcePosition_);}
 	void     Release();
 };

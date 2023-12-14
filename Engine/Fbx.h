@@ -26,6 +26,8 @@ class Fbx
 	{
 		Texture* pTexture;
 		XMFLOAT4 diffuse;
+		XMFLOAT4 ambient;
+		XMFLOAT4 specular;
 	};
 
 	struct CBUFF_MODEL
@@ -34,6 +36,8 @@ class Fbx
 		XMMATRIX     matW; //W
 		XMMATRIX	matNormal; //スケール×平行移動の逆行列
 		XMFLOAT4    diffuseColor;//FBXからとってきた面の色
+		XMFLOAT4    ambientColor;
+		XMFLOAT4    specularColor;
 		BOOL        isTextured;
 		//XMFLOAT4    lightPosition;
 		//XMFLOAT4    eyePos;

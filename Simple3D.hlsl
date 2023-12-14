@@ -14,6 +14,8 @@ cbuffer gmodel:register(b0)
 	float4x4    matW;           //ワールド行列
 	float4x4	matNormal;           // ワールド行列
 	float4      diffuseColor;        //マテリアルの色＝拡散反射係数
+	float4      ambientColor;        //環境光
+	float4      specularColor;       //鏡面反射＝ハイライト
 	bool        isTextured;           //テクスチャ貼ってあるかどうか
 }
 cbuffer gmodel:register(b1)
@@ -86,7 +88,9 @@ float4 PS(VS_OUT inData) : SV_Target
 		diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
 		ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambentSource;
 	}
-	return diffuse + ambient + specular;
+	//return diffuse + ambient + specular;
+
+	return ambientColor;
 }
 //return g_texture.Sample(g_sampler, inData.uv); // (diffuse + ambient);
 //float4 diffuse = lightSource * inData.color;

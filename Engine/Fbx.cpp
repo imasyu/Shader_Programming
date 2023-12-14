@@ -193,17 +193,24 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 	for (int i = 0; i < materialCount_; i++)
 	{
 		//i番目のマテリアル情報を取得
-		FbxSurfacePhong* pMaterial = (FbxSurfacePhong *)pNode->GetMaterial(i);
-		FbxDouble3 diffuse = pMaterial->Diffuse;
-		//diffuse[0].diffuse[1],diffuse[2]
-		FbxDouble3 ambient = pMaterial->Ambient;  //XMFLOAT4
+		FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
 
-		if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId)) {
-			FbxDouble3 specular = pMaterial->Specular;
-			FbxDouble shiness = pMaterial->Shininess;
-		}
+		FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pMaterial;
+
+		FbxDouble3 diffuse = pPhong->Diffuse;
+		FbxDouble3 ambient = pPhong->Ambient;
 
 		pMaterialList_[i].diffuse = XMFLOAT4{ (float)diffuse[0],(float)diffuse[1],(float)diffuse[2],1.0f};
+		pMaterialList_[i].ambient = XMFLOAT4{ (float)diffuse[0],(float)diffuse[1],(float)diffuse[2],1.0f };
+		pMaterialList_[i].specular = XMFLOAT4(0, 0, 0, 0);  //とりあえずハイライトは黒
+
+		//Mayaで指定したのがふぁおんシェーダーだったら
+		if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
+		{
+			//Mayaで指定したSpecularColorの情報
+			FbxDouble3 specular = pPhong->Specular;
+			pMaterialList_[i].specular = XMFLOAT4{ (float)diffuse[0],(float)diffuse[1],(float)diffuse[2],1.0f };
+		}
 
 		//テクスチャ情報
 		FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
@@ -258,7 +265,11 @@ void Fbx::Draw(Transform& transform)
 		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 		cb.matW = XMMatrixTranspose(transform.GetNormalMatrix());
+
 		cb.diffuseColor = pMaterialList_[i].diffuse;
+		cb.ambientColor = pMaterialList_[i].ambient;
+		cb.specularColor = pMaterialList_[i].specular;
+
 		//cb.lightPosition = lightSourcePosition_;
 		//XMStoreFloat4(&cb.eyePos, Camera::GetEyePosition());
 		cb.isTextured = pMaterialList_[i].pTexture != nullptr;

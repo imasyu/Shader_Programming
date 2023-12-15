@@ -28,6 +28,7 @@ class Fbx
 		XMFLOAT4 diffuse;
 		XMFLOAT4 ambient;
 		XMFLOAT4 specular;
+		float shininess;
 	};
 
 	struct CBUFF_MODEL
@@ -38,6 +39,7 @@ class Fbx
 		XMFLOAT4    diffuseColor;//FBXÇ©ÇÁÇ∆Ç¡ÇƒÇ´ÇΩñ ÇÃêF
 		XMFLOAT4    ambientColor;
 		XMFLOAT4    specularColor;
+		FLOAT       shininess;
 		BOOL        isTextured;
 		//XMFLOAT4    lightPosition;
 		//XMFLOAT4    eyePos;
@@ -70,5 +72,6 @@ public:
 	Fbx();
 	HRESULT  Load(std::string fileName);
 	void     Draw(Transform& transform);
+	void     SetRenderingShader(RENDER_STATE _state) { state_ = _state; }
 	void     Release();
 };

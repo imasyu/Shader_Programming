@@ -53,7 +53,7 @@ void Stage::Initialize()
 
     Camera::SetPosition(XMVECTOR{ 0, 10, -20, 0 });
     Camera::SetTarget(XMVECTOR{ 0, 2, 0, 0 });
-    trBall_.position_ = { 0,1,0 };
+    trBall_.position_ = { 0,2,0 };
     trBall_.rotate_ = { 0,0,0 };
     trBall_.scale_ = { 0.4,0.4,0.4 };
 
@@ -105,7 +105,7 @@ void Stage::Update()
     if (Input::IsKey(DIK_W))
     {
         XMFLOAT4 p = GetLightPos();
-        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.0f,p.z + 0.1f,p.w - 0.0f };
+        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.0f,p.z + 0.1f,p.w + 0.0f };
 
         SetLightPos(margin);
     }

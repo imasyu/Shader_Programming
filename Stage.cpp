@@ -74,6 +74,10 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
+    if (Input::IsKeyUp(DIK_SPACE))
+    {
+        Model::ToggleRenderState();
+    }
     if (Input::IsKey(DIK_RIGHT))
     {
         XMFLOAT4 p = GetLightPos();

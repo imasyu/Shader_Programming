@@ -1,15 +1,12 @@
 #include "Model.h"
 #include "Direct3D.h"
 
-struct ModelData
-{
-	Fbx* pfbx_;
-	Transform transform_;
-	std::string filename_;
-	//トランスフォーム
-};
-//モデルのポインタをぶち込んでおくベクタ
-std::vector<ModelData*> modelList;
+namespace Model {
+	//モデルのポインタをぶち込んでおくベクタ
+	std::vector<ModelData*> modelList;
+	RENDER_STATE state_;
+}
+
 
 int Model::Load(std::string fileName)
 {
@@ -45,6 +42,11 @@ void Model::SetTransform(int hModel, Transform transform)
 	modelList[hModel]->transform_ = transform;
 }
 
+Fbx* Model::GetModel(int _hModel)
+{
+	return modelList[_hModel]->pfbx_;
+}
+
 void Model::Draw(int hModel)
 {
 	//モデル番号は、modelListのインデックス
@@ -71,5 +73,15 @@ void Model::Release()
 		SAFE_DELETE(modelList[i]);
 	}
 	modelList.clear();
+}
+
+void Model::ToggleRenderState()
+{
+	int n = (int)(Model::state_);
+	Model::state_ = (RENDER_STATE)(++n % 2);
+	for (auto& theI : modelList)
+	{
+		theI->pfbx_->SetRenderingShader(Model::state_);
+	}
 }
 

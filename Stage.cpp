@@ -74,6 +74,8 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
+    trBall_.rotate_.y += 1;
+
     if (Input::IsKeyUp(DIK_SPACE))
     {
         Model::ToggleRenderState();

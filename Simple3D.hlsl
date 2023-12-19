@@ -4,6 +4,8 @@
 Texture2D		g_texture : register(t0);	//テクスチャー
 SamplerState	g_sampler : register(s0);	//サンプラー
 
+Texture2D       g_toon_texture : register(t1);
+
 //───────────────────────────────────────
 // コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義
@@ -72,7 +74,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
 	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);  //ライトの色&明るさ　lin
-	float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);
+	//float4 ambentSource = float4(0.2, 0.2, 0.2, 1.0);
 	float4 diffuse;
 	float4 ambient;
 	float4 NL = saturate(dot(inData.normal, normalize(lightPosition)));
@@ -87,20 +89,25 @@ float4 PS(VS_OUT inData) : SV_Target
 
 	float4 tI = 0.1 * step(n1, inData.color) + 0.3 * step(n2, inData.color) + 0.3 * step(n3, inData.color) + 0.4 * step(n4, inData.color);
 	
+	float2 uv;
+	uv.x = inData.color.x;
+	uv.y = 0;
 
-	if (isTextured == false)
-	{
-		diffuse = lightSource * diffuseColor * inData.color;
-		ambient = lightSource * diffuseColor * ambentSource;
-	}
-	else
-	{
-		diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * inData.color;
-		ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambentSource;
-	}
-	//return diffuse + ambient + specular;
+	return g_toon_texture.Sample(g_sampler, uv);
 
-	return tI;
+	//if (isTextured == false)
+	//{
+	//	diffuse = lightSource * diffuseColor * tI;
+	//	ambient = lightSource * diffuseColor * ambientColor;
+	//}
+	//else
+	//{
+	//	diffuse = lightSource * g_texture.Sample(g_sampler, inData.uv) * tI;
+	//	ambient = lightSource * g_texture.Sample(g_sampler, inData.uv) * ambientColor;
+	//}
+	////return diffuse + ambient + specular;
+
+	//return diffuse + ambient;
 }
 //return g_texture.Sample(g_sampler, inData.uv); // (diffuse + ambient);
 //float4 diffuse = lightSource * inData.color;

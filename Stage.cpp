@@ -74,7 +74,7 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    trBall_.rotate_.y += 1;
+    trBall_.rotate_.y += 0.5f;
 
     if (Input::IsKeyUp(DIK_SPACE))
     {

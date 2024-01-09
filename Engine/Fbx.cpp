@@ -261,10 +261,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 
 void Fbx::Draw(Transform& transform)
 {
-	if (state_ == RENDRE_DIRLIGHT)
-		Direct3D::SetShader(SHADER_3D);
-	else
-		Direct3D::SetShader(SHADER_POINT);
+	Direct3D::SetShader(SHADER_TOON);
 	
 	transform.Calclation();//トランスフォームを計算
 	

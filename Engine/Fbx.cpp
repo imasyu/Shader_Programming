@@ -7,6 +7,8 @@
 using namespace DirectX;
 using namespace Camera;
 
+#pragma warning(disable:4099)
+
 const XMFLOAT4 LIGHT_POSITION{ 1, 2, 1, 0 };
 
 Fbx::Fbx()
@@ -98,6 +100,19 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 			FbxVector4 Normal;
 			mesh->GetPolygonVertexNormal(poly, vertex, Normal);	//ｉ番目のポリゴンの、ｊ番目の頂点の法線をゲット
 			vertices[index].normal = XMVectorSet((float)Normal[0], (float)Normal[1], (float)Normal[2], 0.0f);
+		}
+	}
+
+	for (int i = 0; i < polygonCount_; i++)
+	{
+		int sIndex = mesh->GetPolygonVertexIndex(i);
+		FbxGeometryElementTangent* t = mesh->GetElementTangent(0);
+		FbxVector4 tangent = t->GetDirectArray().GetAt(sIndex).mData;
+		for (int j = 0; j < 3; j++)
+		{
+			int index = mesh->GetPolygonVertices()[sIndex + j];
+			vertices[index].tangent
+				= { (float)tangent[0], (float)tangent[1], (float)tangent[2], (float)tangent[3] };
 		}
 	}
 
@@ -310,6 +325,11 @@ void Fbx::Draw(Transform& transform)
 
 				ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
 				Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
+			}
+			if (pMaterialList_[i].pNormalTexture)
+			{
+				ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalTexture->GetSRV();
+				Direct3D::pContext_->PSGetShaderResources(2, 1, &pSRV);
 			}
 
 			ID3D11ShaderResourceView* pSRVToon = pToonTex_->GetSRV();

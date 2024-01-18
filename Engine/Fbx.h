@@ -25,7 +25,7 @@ class Fbx
 	struct MATERIAL
 	{
 		Texture* pTexture;
-		Texture* pNormalTexture;
+		Texture* pNormalmap;
 		XMFLOAT4 diffuse;
 		XMFLOAT4 ambient;
 		XMFLOAT4 specular;
@@ -35,13 +35,14 @@ class Fbx
 	struct CBUFF_MODEL
 	{
 		XMMATRIX	matWVP; //wvp ワールドビュープロジェクション
-		XMMATRIX     matW; //W
+		XMMATRIX    matW; //W
 		XMMATRIX	matNormal; //スケール×平行移動の逆行列
 		XMFLOAT4    diffuseColor;//FBXからとってきた面の色
 		XMFLOAT4    ambientColor;
 		XMFLOAT4    specularColor;
 		FLOAT       shininess;
-		BOOL        isTextured;
+		BOOL        hasTexture;
+		BOOL        hasNormalMap;
 	};
 
 	struct VERTEX

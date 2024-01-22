@@ -13,7 +13,7 @@ using std::vector;
 
 enum RENDER_STATE
 {
-	RENDRE_DIRLIGHT,
+	RENDER_DIRLIGHT,
 	RENDER_PNTLIGHT,
 };
 

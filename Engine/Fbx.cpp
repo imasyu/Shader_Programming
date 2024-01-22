@@ -71,7 +71,7 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 	VERTEX* vertices = new VERTEX[vertexCount_];
 
 	//全ポリゴン
-	for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
+	for (DWORD poly = 0; poly < polygonCount_; poly++)
 	{
 		//3頂点分
 		for (int vertex = 0; vertex < 3; vertex++)
@@ -146,13 +146,9 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 
 	for (int i = 0; i < materialCount_; i++)
 	{
-		int count = 0;
-		//全ポリゴン
-		for (DWORD poly = 0; poly < polygonCount_; poly++)
-		{
 			int count = 0;
 			//全ポリゴン
-			for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
+			for (DWORD poly = 0; poly < polygonCount_; poly++)
 			{
 				//あるマテリアルを持ったポリゴンのリストをとってきて、頂点をリストアップ
 				FbxLayerElementMaterial* mtl = mesh->GetLayer(0)->GetMaterials();
@@ -167,8 +163,7 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 						count++;
 					}
 				}
-			}
-		}
+	         }
 		indexCount_[i] = count;
 
 		D3D11_BUFFER_DESC   bd;
@@ -309,7 +304,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 
 void Fbx::Draw(Transform& transform)
 {
-	if (state_ == RENDRE_DIRLIGHT)
+	if (state_ == RENDER_DIRLIGHT)
 	{
 		Direct3D::SetShader(SHADER_NORMALMAP);
 	}

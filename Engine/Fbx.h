@@ -49,8 +49,8 @@ class Fbx
 	{
 		XMVECTOR position;  //位置
 		XMVECTOR uv;        //テクスチャ座標
-		XMVECTOR normal;    //法線
-		XMVECTOR tangent;   //接線
+		XMVECTOR normal;    //法線ベクトル
+		XMVECTOR tangent;   //接線ベクトル
 	};
 
 	int vertexCount_;	//頂点数
@@ -68,7 +68,6 @@ class Fbx
 	void IntConstantBuffer();
 	void InitMaterial(fbxsdk::FbxNode* pNode);
 	RENDER_STATE state_;
-	Texture* pToonTex_;
 public:
 
 	Fbx();

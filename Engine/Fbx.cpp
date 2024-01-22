@@ -7,8 +7,6 @@
 using namespace DirectX;
 using namespace Camera;
 
-#pragma warning(disable:4099)
-
 const XMFLOAT4 LIGHT_POSITION{ 1, 2, 1, 0 };
 
 Fbx::Fbx()
@@ -63,11 +61,6 @@ HRESULT Fbx::Load(std::string fileName)
 
 	//マネージャ解放
 	pFbxManager->Destroy();
-
-	pToonTex_ = new Texture;
-	pToonTex_->Load("Assets\\toon2.png");
-
-
 	return S_OK;
 }
 
@@ -78,7 +71,7 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 	VERTEX* vertices = new VERTEX[vertexCount_];
 
 	//全ポリゴン
-	for (DWORD poly = 0; poly < polygonCount_; poly++)
+	for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
 	{
 		//3頂点分
 		for (int vertex = 0; vertex < 3; vertex++)
@@ -157,17 +150,22 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 		//全ポリゴン
 		for (DWORD poly = 0; poly < polygonCount_; poly++)
 		{
-			//あるマテリアルを持ったポリゴンのリストをとってきて、頂点をリストアップ
-			FbxLayerElementMaterial* mtl = mesh->GetLayer(0)->GetMaterials();
-			int mtlId = mtl->GetIndexArray().GetAt(poly);
-
-			if (mtlId == i)
+			int count = 0;
+			//全ポリゴン
+			for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
 			{
-				//3頂点分
-				for (DWORD vertex = 0; vertex < 3; vertex++)
+				//あるマテリアルを持ったポリゴンのリストをとってきて、頂点をリストアップ
+				FbxLayerElementMaterial* mtl = mesh->GetLayer(0)->GetMaterials();
+				int mtlId = mtl->GetIndexArray().GetAt(poly);
+
+				if (mtlId == i)
 				{
-					index[count] = mesh->GetPolygonVertex(poly, vertex);
-					count++;
+					//3頂点分
+					for (DWORD vertex = 0; vertex < 3; vertex++)
+					{
+						index[count] = mesh->GetPolygonVertex(poly, vertex);
+						count++;
+					}
 				}
 			}
 		}
@@ -277,7 +275,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 		//ノーマルマップ用テクスチャ
 		{
 			//テクスチャ情報
-			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sNormalMap);
+			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
 
 			//テクスチャの数数
 			int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
@@ -311,11 +309,15 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 
 void Fbx::Draw(Transform& transform)
 {
-	//Direct3D::SetShader(SHADER_OUTLINE);
-	Direct3D::SetShader(SHADER_NORMALMAP);
+	if (state_ == RENDRE_DIRLIGHT)
+	{
+		Direct3D::SetShader(SHADER_NORMALMAP);
+	}
+	else {
+		Direct3D::SetShader(SHADER_3D);
+	}
 
 	transform.Calclation();//トランスフォームを計算
-	for (int j = 0; j < 2; j++) {
 
 		for (int i = 0; i < materialCount_; i++)
 		{
@@ -370,10 +372,6 @@ void Fbx::Draw(Transform& transform)
 			//描画
 			Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
 		}
-		Direct3D::SetShader(SHADER_TOON);
-	}
-
-
 }
 
 void Fbx::Release()

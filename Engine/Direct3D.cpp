@@ -16,6 +16,11 @@ namespace Direct3D
 	ID3D11Texture2D* pDepthStencil;			//深度ステンシル
 	ID3D11DepthStencilView* pDepthStencilView;		//深度ステンシルビュー
 
+	ID3D11VertexShader* pVertexShader_ = nullptr;	//頂点シェーダー
+	ID3D11PixelShader* pPixelShader_ = nullptr;		//ピクセルシェーダー
+	ID3D11InputLayout* pVertexLayout_ = nullptr;	//頂点インプットレイアウト
+	ID3D11RasterizerState* pRasterizerState_ = nullptr;	//ラスタライザー
+
 	struct SHADER_BUNDLE
 	{
 		ID3D11VertexShader* pVertexShader_ = nullptr;	//頂点シェーダー
@@ -95,7 +100,7 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 		MessageBox(NULL, "レンダーターゲットビューの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
-    //一時的にバックバッファを取得しただけなので解放
+	//一時的にバックバッファを取得しただけなので解放
 	SAFE_RELEASE(pBackBuffer);
 
 	///////////////////////////ビューポート（描画範囲）設定///////////////////////////////
@@ -154,11 +159,6 @@ HRESULT Direct3D::InitShader()
 	}
 
 	if (FAILED(InitToonShade()))
-	{
-		return E_FAIL;
-	}
-
-	if (FAILED(InitNormalMap()))
 	{
 		return E_FAIL;
 	}
@@ -260,16 +260,16 @@ HRESULT Direct3D::InitShader3D()
 	/*D3D11_RASTERIZER_DESC rdc = {};
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;*/
-//	rdc.FillMode = D3D11_FILL_WIREFRAME;
-	//rdc.FrontCounterClockwise = FALSE;
-	//hr = pDevice_->CreateRasterizerState(&rdc, &pRasterizerState_);
-	//if (FAILED(hr))
-	//{
-	//	//エラー処理
-	//	return hr;
-	//}
+	//	rdc.FillMode = D3D11_FILL_WIREFRAME;
+		//rdc.FrontCounterClockwise = FALSE;
+		//hr = pDevice_->CreateRasterizerState(&rdc, &pRasterizerState_);
+		//if (FAILED(hr))
+		//{
+		//	//エラー処理
+		//	return hr;
+		//}
 
-	//ラスタライザ作成
+		//ラスタライザ作成
 	D3D11_RASTERIZER_DESC rdc = {};
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
@@ -415,7 +415,7 @@ HRESULT Direct3D::InitToonShade()
 
 	//ラスタライザ作成
 	D3D11_RASTERIZER_DESC rdc = {};
-	rdc.CullMode = D3D11_CULL_FRONT;
+	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
 	rdc.ScissorEnable = false;
@@ -431,17 +431,17 @@ HRESULT Direct3D::InitToonShade()
 	return S_OK;
 }
 
-HRESULT Direct3D::InitNormalMap()
+HRESULT Direct3D::InitToonOutline()
 {
-	HRESULT hr;
 	using namespace Direct3D;
+	HRESULT hr;
 	// 頂点シェーダの作成（コンパイル）
 	ID3DBlob* pCompileVS = nullptr;
-	D3DCompileFromFile(L"NormalMapping.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+	D3DCompileFromFile(L"ToonOutline.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 	assert(pCompileVS != nullptr); //ここはassertionで処理
 
 	hr = pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(),
-		NULL, &(shaderBundle[SHADER_NORMALMAP].pVertexShader_));
+		NULL, &(shaderBundle[SHADER_OUTLINE].pVertexShader_));
 	if (FAILED(hr))
 	{
 		//エラー処理
@@ -449,26 +449,15 @@ HRESULT Direct3D::InitNormalMap()
 		//解放処理
 		return hr;
 	}
-	//ID3DBlob* pCompileVS = nullptr;
-	//D3DCompileFromFile(L"Simple3Dr.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
-	//assert(pCompileVS != nullptr);
-	////pCompileVS = nullptr;
-	//hr = pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader_);
-	//if (FAILED(hr))
-	//{
-	//	//エラー処理
-	//	return hr;
-	//}
 
 	//頂点インプットレイアウト
 	D3D11_INPUT_ELEMENT_DESC layout[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(DirectX::XMVECTOR) * 0 ,  D3D11_INPUT_PER_VERTEX_DATA, 0},	//位置
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, sizeof(DirectX::XMVECTOR) * 1 ,  D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
-		{ "NORMAL",	  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(DirectX::XMVECTOR) * 2 ,  D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
-		{ "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(DirectX::XMVECTOR) * 3 ,  D3D11_INPUT_PER_VERTEX_DATA, 0 },//接線
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
+		{ "NORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(DirectX::XMVECTOR) * 2 ,	D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
 	};
-	hr = pDevice_->CreateInputLayout(layout, ARRAYSIZE(layout), pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(),
-		&(shaderBundle[SHADER_NORMALMAP].pVertexLayout_));
+	hr = pDevice_->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(),
+		&(shaderBundle[SHADER_OUTLINE].pVertexLayout_));
 	if (FAILED(hr))
 	{
 		//エラー処理
@@ -479,12 +468,40 @@ HRESULT Direct3D::InitNormalMap()
 	}
 	SAFE_RELEASE(pCompileVS);
 
-	//D3D11_INPUT_ELEMENT_DESC layout[] = {
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
-	//	{ "TEXCOORDE", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
-	//	{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(DirectX::XMVECTOR) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
-	//};
-	//
+	// ピクセルシェーダの作成（コンパイル）
+	ID3DBlob* pCompilePS = nullptr;
+	D3DCompileFromFile(L"ToonOutline.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+	assert(pCompilePS != nullptr);
+
+	hr = pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(),
+		NULL, &(shaderBundle[SHADER_OUTLINE].pPixelShader_));
+	if (FAILED(hr))
+	{
+		//エラー処理
+		MessageBox(NULL, "ピクセルシェーダの作成に失敗しました", "エラー", MB_OK);
+		SAFE_RELEASE(pCompilePS);
+		return hr;
+	}
+
+	SAFE_RELEASE(pCompilePS);
+
+	//ラスタライザ作成
+	D3D11_RASTERIZER_DESC rdc = {};
+	rdc.CullMode = D3D11_CULL_FRONT;
+	rdc.FillMode = D3D11_FILL_SOLID;
+	rdc.FrontCounterClockwise = FALSE;
+	rdc.ScissorEnable = false;
+	rdc.MultisampleEnable = false;
+	hr = pDevice_->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_OUTLINE].pRasterizerState_));
+	if (FAILED(hr))
+	{
+		//エラー処理
+		MessageBox(NULL, "ラスタライザの作成に失敗しました", "エラー", MB_OK);
+		return hr;
+	}
+
+	return S_OK;
+}
 
 
 void Direct3D::SetShader(SHADER_TYPE type)
@@ -500,14 +517,13 @@ void Direct3D::SetShader(SHADER_TYPE type)
 void Direct3D::BeginDraw()
 {
 	//背景の色
-	//float clearColor[4] = { 0.0f, 0.5f, 0.5f, 1.0f };//R,G,B,A
-	float clearColor[4] = { 0.7f, 0.6f, 0.3f, 1.0f };//R,G,B,A
+	float clearColor[4] = { 0.0f, 0.5f, 0.5f, 1.0f };//R,G,B,A
 
 	//画面をクリア
 	pContext_->ClearRenderTargetView(pRenderTargetView_, clearColor);
 
 	// 深度バッファクリア
-		pContext_->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	pContext_->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 
@@ -538,5 +554,5 @@ void Direct3D::Release()
 	SAFE_RELEASE(pContext_);
 	SAFE_RELEASE(pDevice_);
 
-	
+
 }

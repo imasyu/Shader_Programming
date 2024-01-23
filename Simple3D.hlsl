@@ -87,7 +87,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	//float4 n3 = float4(3 / 4.0, 3 / 4.0, 3 / 4.0, 1);
 	//float4 n4 = float4(4 / 4.0, 4 / 4.0, 4 / 4.0, 1);
 	//float4 tI = 0.1 * step(n1, inData.color) + 0.3 * step(n2, inData.color) + 0.3 * step(n3, inData.color) + 0.4 * step(n4, inData.color);
-	
+
 	float2 uv;
 	uv.x = inData.color.x;
 	uv.y = 0;
@@ -112,9 +112,9 @@ float4 PS(VS_OUT inData) : SV_Target
 	//輪郭＝視線ベクトルと面の法線の角度が90度付近
 	if (abs(NV) < 0.3)
 		return float4(0, 0, 0, 0);
-	else 
+	else
 		return diffuse + ambient + specular;
-		
+
 }
 //return g_texture.Sample(g_sampler, inData.uv); // (diffuse + ambient);
 //float4 diffuse = lightSource * inData.color;

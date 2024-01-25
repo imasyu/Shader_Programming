@@ -11,12 +11,6 @@
 
 using std::vector;
 
-enum RENDER_STATE
-{
-	RENDER_DIRLIGHT,
-	RENDER_PNTLIGHT,
-};
-
 class Texture;
 
 class Fbx
@@ -25,24 +19,14 @@ class Fbx
 	struct MATERIAL
 	{
 		Texture* pTexture;
-		Texture* pNormalmap;
 		XMFLOAT4 diffuse;
-		XMFLOAT4 ambient;
-		XMFLOAT4 specular;
-		float shininess;
 	};
 
-	struct CBUFF_MODEL
+	struct CONSTANT_BUFFERL
 	{
 		XMMATRIX	matWVP; //wvp ワールドビュープロジェクション
-		XMMATRIX    matW; //W
 		XMMATRIX	matNormal; //スケール×平行移動の逆行列
 		XMFLOAT4    diffuseColor;//FBXからとってきた面の色
-		XMFLOAT4    ambientColor;
-		XMFLOAT4    specularColor;
-		FLOAT       shininess;
-		BOOL        hasTexture;
-		BOOL        hasNormalMap;
 	};
 
 	struct VERTEX
@@ -50,7 +34,6 @@ class Fbx
 		XMVECTOR position;  //位置
 		XMVECTOR uv;        //テクスチャ座標
 		XMVECTOR normal;    //法線ベクトル
-		XMVECTOR tangent;   //接線ベクトル
 	};
 
 	int vertexCount_;	//頂点数
@@ -67,12 +50,10 @@ class Fbx
 	void InitIndex(fbxsdk::FbxMesh* mesh);
 	void IntConstantBuffer();
 	void InitMaterial(fbxsdk::FbxNode* pNode);
-	RENDER_STATE state_;
 public:
 
 	Fbx();
 	HRESULT  Load(std::string fileName);
 	void     Draw(Transform& transform);
-	void     SetRenderingShader(RENDER_STATE _state) { state_ = _state; }
 	void     Release();
 };

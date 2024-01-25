@@ -39,10 +39,10 @@ void Stage::Initialize()
     hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 
-    hBall_ = Model::Load("Assets/Ring.fbx");
+    hBall_ = Model::Load("Assets/Ball.fbx");
     assert(hBall_ >= 0);
 
-    hLightBall_ = Model::Load("Assets/Ball.fbx");
+    hLightBall_ = Model::Load("Assets/Ball1.fbx");
     assert(hLightBall_ >= 0);
 
    hArrow_[0] = Model::Load("Assets/Arrow.fbx");
@@ -55,7 +55,7 @@ void Stage::Initialize()
     Camera::SetTarget(XMVECTOR{ 0, 1, -10, 0 });
     trBall_.position_ = { 0,2,0 };
     trBall_.rotate_ = { 0,0,0 };
-    trBall_.scale_ = { 0.4,0.4,0.4 };
+    //trBall_.scale_ = { 0.4,0.4,0.4 };
 
     trLight_.position_ = { 0,0,0 };
     trLight_.rotate_ = { 0,0,0 };
@@ -74,7 +74,7 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    trBall_.rotate_.y += 0.5f;
+    //trBall_.rotate_.y += 0.5f;
 
     if (Input::IsKeyUp(DIK_SPACE))
     {

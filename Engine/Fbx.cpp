@@ -71,7 +71,7 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 	VERTEX* vertices = new VERTEX[vertexCount_];
 
 	//全ポリゴン
-	for (DWORD poly = 0; poly < polygonCount_; poly++)
+	for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
 	{
 		//3頂点分
 		for (int vertex = 0; vertex < 3; vertex++)
@@ -148,7 +148,7 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 	{
 			int count = 0;
 			//全ポリゴン
-			for (DWORD poly = 0; poly < polygonCount_; poly++)
+			for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
 			{
 				//あるマテリアルを持ったポリゴンのリストをとってきて、頂点をリストアップ
 				FbxLayerElementMaterial* mtl = mesh->GetLayer(0)->GetMaterials();
@@ -238,7 +238,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 		//通常テクスチャ
 		{
 			//テクスチャ情報
-			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
+			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 
 			//テクスチャの数数
 			int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();

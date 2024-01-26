@@ -68,11 +68,11 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL, f
 	tangent = normalize(tangent); //接線ベクトルをローカル座標に変換したやつ
 
 	float4 posw = mul(pos, matW);
-	outData.eyev = normalize(posw - eyePosition); //ワールド座標の視線ベクトル
+	float4 eyev = normalize(posw - eyePosition); //ワールド座標の視線ベクトル
 
-	outData.Neyev.x = dot(outData.eyev, tangent);//接空間の視線ベクトル
-	outData.Neyev.y = dot(outData.eyev, binormal);
-	outData.Neyev.z = dot(outData.eyev, normal);
+	outData.Neyev.x = dot(eyev, tangent);//接空間の視線ベクトル
+	outData.Neyev.y = dot(eyev, binormal);
+	outData.Neyev.z = dot(eyev, normal);
 	outData.Neyev.w = 0;
 
 	float4 light = normalize(lightPosition);
@@ -105,12 +105,12 @@ float4 PS(VS_OUT inData) : SV_Target
 	{
 		float4 tmpNormal = normalTex.Sample(g_sampler, inData.uv) * 2.0f - 1.0f;
 
-		tmpNormal = normalize(tmpNormal);
 		tmpNormal.w = 0;
+		tmpNormal = normalize(tmpNormal);
 
 		float4 NL = clamp(dot(normalize(inData.light), tmpNormal), 0, 1);
 		float4 reflection = reflect(normalize(inData.light), tmpNormal);
-		float4 specular = pow(saturate(dot(reflection, normalize(inData.Neyev))), shininess) * specularColor;
+		float4 specular = pow(saturate(dot(reflection, inData.Neyev)), shininess) * specularColor;
 
 		if (hasTexture != 0)
 		{

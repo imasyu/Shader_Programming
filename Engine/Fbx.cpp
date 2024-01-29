@@ -7,7 +7,7 @@
 using namespace DirectX;
 using namespace Camera;
 
-const XMFLOAT4 LIGHT_POSITION{ 1, 2, 1, 0 };
+//const XMFLOAT4 LIGHT_POSITION{ 1, 2, 1, 0 };
 
 Fbx::Fbx()
 	:vertexCount_(0), polygonCount_(0), materialCount_(0),
@@ -240,7 +240,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 			//テクスチャ情報
 			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 
-			//テクスチャの数数
+			//テクスチャの数
 			int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
 
 			//テクスチャあり

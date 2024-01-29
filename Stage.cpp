@@ -57,17 +57,21 @@ void Stage::Initialize()
     trBall_.rotate_ = { 0,0,0 };
     //trBall_.scale_ = { 0.4,0.4,0.4 };
 
+    trBall1_.position_ = { 1,1,2 };
+    trBall1_.rotate_ = { 0,0,0 };
+    trBall1_.scale_ = { 0.2f, 0.2f,0.2f };
+   
     trLight_.position_ = { 0,0,0 };
     trLight_.rotate_ = { 0,0,0 };
-    trLight_.scale_ = { 0.4,0.4,0.4 };
+    trLight_.scale_ = { 0.4f,0.4f,0.4f };
     
     trArrow1_.position_ = { 0,0,0 };
     trArrow1_.rotate_ = { 90,90,0 };
-    trArrow1_.scale_ = { 0.5,0.5,0.5 };
+    trArrow1_.scale_ = { 0.5f,0.5f,0.5f };
 
     trArrow2_.position_ = { 2,-2,0 };
     trArrow2_.rotate_ = { 0,1,0 };
-    trArrow2_.scale_ = { 0.5,0.5,0.5 };
+    trArrow2_.scale_ = { 0.5f,0.5f,0.5f };
 
     IntConstantBuffer();
 }
@@ -127,7 +131,7 @@ void Stage::Update()
 
     CBUFF_STAGE cb;
     cb.lightPosition = lightSourcePosition_;
-    XMStoreFloat4(&cb.eyePos, Camera::GetEyePosition());
+    XMStoreFloat4(&(cb.eyePos), Camera::GetEyePosition());
 
     Direct3D::pContext_->UpdateSubresource(pCBStageScene_, 0, NULL, &cb, 0, 0);
 

@@ -59,6 +59,7 @@ HRESULT Fbx::Load(std::string fileName)
 	//カレントディレクトリを元に戻す
 	SetCurrentDirectory(defaultCurrentDir);
 
+
 	//マネージャ解放
 	pFbxManager->Destroy();
 	return S_OK;
@@ -100,7 +101,7 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 	//タンジェント取得
 	for (int i = 0; i < polygonCount_; i++)
 	{
-		FbxVector4 tangent{ 0, 0, 0, 0 };
+		FbxVector4 tangent{ 0,0,0,0 };
 		int startIndex = mesh->GetPolygonVertexIndex(i);
 		if (t) {
 			tangent = t->GetDirectArray().GetAt(startIndex).mData;
@@ -112,6 +113,7 @@ void Fbx::InitVertex(fbxsdk::FbxMesh* mesh)
 			vertices[index].tangent = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
 		}
 	}
+
 
 	//頂点バッファ
 	HRESULT hr;
@@ -146,24 +148,24 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* mesh)
 
 	for (int i = 0; i < materialCount_; i++)
 	{
-			int count = 0;
-			//全ポリゴン
-			for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
-			{
-				//あるマテリアルを持ったポリゴンのリストをとってきて、頂点をリストアップ
-				FbxLayerElementMaterial* mtl = mesh->GetLayer(0)->GetMaterials();
-				int mtlId = mtl->GetIndexArray().GetAt(poly);
+		int count = 0;
+		//全ポリゴン
+		for (DWORD poly = 0; poly < (unsigned int)polygonCount_; poly++)
+		{
+			//あるマテリアルを持ったポリゴンのリストをとってきて、頂点をリストアップ
+			FbxLayerElementMaterial* mtl = mesh->GetLayer(0)->GetMaterials();
+			int mtlId = mtl->GetIndexArray().GetAt(poly);
 
-				if (mtlId == i)
+			if (mtlId == i)
+			{
+				//3頂点分
+				for (DWORD vertex = 0; vertex < 3; vertex++)
 				{
-					//3頂点分
-					for (DWORD vertex = 0; vertex < 3; vertex++)
-					{
-						index[count] = mesh->GetPolygonVertex(poly, vertex);
-						count++;
-					}
+					index[count] = mesh->GetPolygonVertex(poly, vertex);
+					count++;
 				}
-	         }
+			}
+		}
 		indexCount_[i] = count;
 
 		D3D11_BUFFER_DESC   bd;
@@ -214,7 +216,10 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 	{
 		//i番目のマテリアル情報を取得
 		FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
+
 		FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pMaterial;
+
+
 		FbxDouble3  diffuse = pPhong->Diffuse;
 		FbxDouble3  ambient = pPhong->Ambient;
 
@@ -235,12 +240,13 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 			pMaterialList_[i].shininess = (float)shininess;
 		}
 
-		//通常テクスチャ
+
+
 		{
 			//テクスチャ情報
 			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 
-			//テクスチャの数
+			//テクスチャの数数
 			int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
 
 			//テクスチャあり
@@ -267,7 +273,7 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 				//マテリアルの色
 			}
 		}
-		//ノーマルマップ用テクスチャ
+		//ノーマルテクスチャ
 		{
 			//テクスチャ情報
 			FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sBump);
@@ -305,68 +311,70 @@ void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 void Fbx::Draw(Transform& transform)
 {
 	if (state_ == RENDER_DIRLIGHT)
-	{
 		Direct3D::SetShader(SHADER_NORMALMAP);
-	}
-	else {
+	else
 		Direct3D::SetShader(SHADER_3D);
-	}
-
+	//Direct3D::SetShader(SHADER_NORMALMAP);
 	transform.Calclation();//トランスフォームを計算
 
-		for (int i = 0; i < materialCount_; i++)
+
+	for (int i = 0; i < materialCount_; i++)
+	{
+		//コンスタントバッファに情報を渡す
+		CBUFF_MODEL cb;
+		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
+		cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
+
+
+		cb.diffuseColor = pMaterialList_[i].diffuse;
+		cb.ambientColor = pMaterialList_[i].ambient;
+		cb.specularColor = pMaterialList_[i].specular;
+		cb.shininess = pMaterialList_[i].shininess;
+
+
+		cb.hasTexture = pMaterialList_[i].pTexture != nullptr;
+		cb.hasNormalMap = pMaterialList_[i].pNormalmap != nullptr;
+
+
+		Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);
+
+		//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
+		//頂点バッファ
+		UINT stride = sizeof(VERTEX);
+		UINT offset = 0;
+		Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+
+		// インデックスバッファーをセット
+		stride = sizeof(int);
+		offset = 0;
+		Direct3D::pContext_->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
+
+		//コンスタントバッファ
+		Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+		Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+
+
+		if (pMaterialList_[i].pTexture)
 		{
-			//コンスタントバッファに情報を渡す
-			CBUFF_MODEL cb;
-			cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-			cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
-			cb.matW = XMMatrixTranspose(transform.GetWorldMatrix());
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
+			Direct3D::pContext_->PSSetSamplers(0, 1, &pSampler);
 
-
-			cb.diffuseColor = pMaterialList_[i].diffuse;
-			cb.ambientColor = pMaterialList_[i].ambient;
-			cb.specularColor = pMaterialList_[i].specular;
-			cb.shininess = pMaterialList_[i].shininess;
-
-			cb.hasTexture = pMaterialList_[i].pTexture != nullptr;
-			cb.hasNormalMap = pMaterialList_[i].pNormalmap != nullptr;
-
-			Direct3D::pContext_->UpdateSubresource(pConstantBuffer_, 0, NULL, &cb, 0, 0);
-
-			//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
-			//頂点バッファ
-			UINT stride = sizeof(VERTEX);
-			UINT offset = 0;
-			Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-
-
-			// インデックスバッファーをセット
-			stride = sizeof(int);
-			offset = 0;
-			Direct3D::pContext_->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
-
-			//コンスタントバッファ
-			Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
-			Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
-
-
-			if (pMaterialList_[i].pTexture)
-			{
-				ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
-				Direct3D::pContext_->PSSetSamplers(0, 1, &pSampler);
-
-				ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
-				Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
-			}
-			if (pMaterialList_[i].pNormalmap)
-			{
-				ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalmap->GetSRV();
-				Direct3D::pContext_->PSGetShaderResources(1, 1, &pSRV);
-			}
-
-			//描画
-			Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
+			Direct3D::pContext_->PSSetShaderResources(0, 1, &pSRV);
 		}
+
+
+		if (pMaterialList_[i].pNormalmap)
+		{
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalmap->GetSRV();
+			Direct3D::pContext_->PSSetShaderResources(1, 1, &pSRV);
+		}
+
+		//描画
+		Direct3D::pContext_->DrawIndexed(indexCount_[i], 0, 0);
+	}
 }
 
 void Fbx::Release()

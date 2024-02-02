@@ -80,6 +80,8 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	CONSTANT_BUFFER cb;
 
+	transform.Calclation();//トランスフォームを計算
+
 	//表示するサイズに合わせる
 	XMMATRIX cut = XMMatrixScaling((float)rect.right, (float)rect.bottom, 1);
 
@@ -110,8 +112,10 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 
 	Direct3D::pContext_->Unmap(pConstantBuffer_, 0);  //GPUからのリソースアクセスを再開
 
+	SetBufferToPipeline();
+
 	//ポリゴンメッシュを描画する
-	Direct3D::pContext_->DrawIndexed(6, 0, 0);
+	Direct3D::pContext_->DrawIndexed(indexNum, 0, 0);
 
 	Direct3D::SetShader(SHADER_TYPE::SHADER_3D);
 
@@ -161,8 +165,8 @@ void Sprite::InitVertexData()
 	{
 		{ XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },// 四角形の頂点（左上）
 		{ XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },	// 四角形の頂点（右上）
+		{ XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) },	// 四角形の頂点（左下）
 		{ XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },// 四角形の頂点（右下）
-		{ XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) },	// 四角形の頂点（左下）		
 	};
 
 	//頂点の数
@@ -172,7 +176,7 @@ void Sprite::InitVertexData()
 	HRESULT hr;
 	D3D11_BUFFER_DESC bd_vertex;
 	bd_vertex.ByteWidth = (unsigned int)(sizeof(VERTEX) * vertexNum_);
-	bd_vertex.Usage = D3D11_USAGE_DYNAMIC;
+	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
 	bd_vertex.MiscFlags = 0;
@@ -185,7 +189,7 @@ void Sprite::InitVertexData()
 //インデックス情報を準備
 void Sprite::InitIndexData()
 {
-	index_ = { 0,2,3, 0,1,2 };
+	index_ = { 2,1,0, 2,3,1 };
 
 	//インデックス数
 	indexNum = index_.size();
@@ -215,7 +219,7 @@ HRESULT Sprite::CreateConstantBuffer()
 {
 	D3D11_BUFFER_DESC cb;
 	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
-	cb.Usage = D3D11_USAGE_DEFAULT;
+	cb.Usage = D3D11_USAGE_DYNAMIC;
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	cb.MiscFlags = 0;

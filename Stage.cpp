@@ -39,7 +39,7 @@ void Stage::Initialize()
     hModel_ = Model::Load("Assets/Ground.fbx");
     assert(hModel_ >= 0);
 
-    hBall_ = Model::Load("Assets/Ball.fbx");
+    hBall_ = Model::Load("Assets/Ring.fbx");
     assert(hBall_ >= 0);
 
     hLightBall_ = Model::Load("Assets/Ball1.fbx");
@@ -51,7 +51,7 @@ void Stage::Initialize()
     hArrow_[1] = Model::Load("Assets/Arrow.fbx");
     assert(hArrow_[1] >= 0);
 
-    Camera::SetPosition(XMVECTOR{ 0, 10, -5, 0 });
+    Camera::SetPosition(XMVECTOR{ 0, 1, -15, 0 });
     Camera::SetTarget(XMVECTOR{ 0, 1, -10, 0 });
     trBall_.position_ = { 0,2,0 };
     trBall_.rotate_ = { 0,0,0 };
@@ -147,20 +147,28 @@ void Stage::Draw()
 {
     //q->Draw(transform_);
 
-    //Model::SetTransform(hModel_, transform_);
-    //Model::Draw(hModel_);
+    Model::SetTransform(hModel_, transform_);
+    Model::Draw(hModel_);
 
-    Model::SetTransform(hBall_, trBall_);
+   Model::SetTransform(hBall_, trBall_);
     Model::Draw(hBall_);
 
     Model::SetTransform(hLightBall_, trLight_);
     Model::Draw(hLightBall_);
 
-    Model::SetTransform(hArrow_[0], trArrow1_);
+
+    /*Model::SetTransform(hArrow_[0], trArrow1_);
     Model::Draw(hArrow_[0]);
 
     Model::SetTransform(hArrow_[1], trArrow2_);
-    Model::Draw(hArrow_[1]);
+    Model::Draw(hArrow_[1]);*/
+
+    Transform t;
+    t.position_ = { 0,0,0 };
+    t.scale_ = { 1.0,1.0,1.0 };
+    t.rotate_ = { 0,0,0 };
+    RECT rec{ 0,0,300,300 };
+    sprite_->Draw(t, rec, 0.5f);
 }
 
 void Stage::Release()

@@ -132,12 +132,12 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	ZeroMemory(&BlendDesc, sizeof(BlendDesc));
 	BlendDesc.AlphaToCoverageEnable = FALSE;
 	BlendDesc.IndependentBlendEnable = FALSE;
-
 	BlendDesc.RenderTarget[0].BlendEnable = TRUE;                       //”¼“§–¾Žg‚¤‚©‚Ç‚¤‚©
+	//ƒŠƒ\[ƒX‘¤‚ÌÝ’è
 	BlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;         //¡•`‰æ‚µ‚æ‚¤‚Æ‚µ‚Ä‚é‚à‚Ì
 	BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;    //‚·‚Å‚É•`‰æ‚³‚ê‚Ä‚¢‚é‚à‚Ì
-	BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;             
 
+	BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;             
 	BlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 	BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
@@ -362,7 +362,7 @@ HRESULT Direct3D::InitShader2D()
 	D3D11_RASTERIZER_DESC rdc = {};
 	rdc.CullMode = D3D11_CULL_BACK;
 	rdc.FillMode = D3D11_FILL_SOLID;
-	rdc.FrontCounterClockwise = FALSE;
+	rdc.FrontCounterClockwise = TRUE;
 	//rdc.ScissorEnable = false;
 	//rdc.MultisampleEnable = false;
 	hr = pDevice_->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_2D].pRasterizerState_));

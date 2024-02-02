@@ -24,39 +24,51 @@ HRESULT Sprite::Initialize()
 {
 	//頂点情報
 	InitVertexData();					//データを用意して
-	if (FAILED(CreateVertexBuffer()))	//頂点バッファ作成
-	{
-		return E_FAIL;
-	}
-
+	
 	//インデックス情報
 	InitIndexData();					//データを用意して
-	if (FAILED(CreateIndexBuffer()))	//インデックスバッファ作成
-	{
-		return E_FAIL;
-	}
-
+	
 	//コンスタントバッファ作成
 	if (FAILED(CreateConstantBuffer()))
 	{
 		return E_FAIL;
 	}
 
-	//テクスチャのロード
-	if (FAILED(LoadTexture()))
-	{
-		return E_FAIL;
-	}
+	////テクスチャのロード
+	//if (FAILED(LoadTexture()))
+	//{
+	//	return E_FAIL;
+	//}
 
 	return S_OK;
 }
 
 
 //描画
-void Sprite::Draw(Transform& transform)
+void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 {
+	//いろいろ設定
 	Direct3D::SetShader(SHADER_2D);
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	Direct3D::pContext_->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+	Direct3D::pContext_->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
+	Direct3D::pContext_->PSSetConstantBuffers(0, 1, &pConstantBuffer_);
+	Direct3D::SetDepthBafferWriteEnable(false);
+	//インデックスバッファーをセット
+	stride = sizeof(int);
+	offset = 0;
+	Direct3D::pContext_->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
 
+	//パラメータの受け渡し
+	D3D11_MAPPED_SUBRESOURCE pdata;
+	CONSTANT_BUFFER cb;
+
+	//表示するサイズに合わせる
+	XMMATRIX cut = XMMatrixScaling((float)rect.right, (float)rect.bottom, 1);
+
+	//画面に合わせる
+	XMMATRIX view = XMMatrixScaling(1.0f/Direct3D::SetShader)
 
 	transform.Calclation();//トランスフォームを計算
 

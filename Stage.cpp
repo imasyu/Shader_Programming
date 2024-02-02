@@ -27,7 +27,7 @@ void Stage::IntConstantBuffer()
 }
 
 Stage::Stage(GameObject* parent)
-	:GameObject(parent, "Stage"), hModel_(-1), hBall_(-1), hArrow_{-1, -1}, hLightBall_(-1), lightSourcePosition_(DEF_LIGHT_POSITION)
+	:GameObject(parent, "Stage"), hModel_(-1), hBall_(-1), hArrow_{-1, -1}, hLightBall_(-1), lightSourcePosition_(DEF_LIGHT_POSITION), sprite_(nullptr)
 {
 }
 
@@ -74,6 +74,10 @@ void Stage::Initialize()
     trArrow2_.scale_ = { 0.5f,0.5f,0.5f };
 
     IntConstantBuffer();
+
+    sprite_ = new Sprite;
+
+    sprite_->Load("tex.png");
 }
 
 void Stage::Update()

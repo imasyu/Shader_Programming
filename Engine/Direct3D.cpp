@@ -26,6 +26,7 @@ namespace Direct3D
 		ID3D11RasterizerState* pRasterizerState_ = nullptr;	//ラスタライザー
 	};
 	SHADER_BUNDLE shaderBundle[SHADER_MAX];
+	SIZE screenSize;
 }
 
 
@@ -158,6 +159,8 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 		//エラー処理
 		return hr;
 	}
+
+	screenSize = { winW,winH };
 
 	return S_OK;
 }

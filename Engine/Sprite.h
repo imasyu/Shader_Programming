@@ -13,7 +13,7 @@ class Sprite
 	{
 		XMMATRIX    world;     //頂点座標変換行列
 		XMMATRIX    uvTrans;   //テクスチャ座標変換行列
-		XMMATRIX    color;     //テクスチャとの合成色
+		XMFLOAT4    color;     //テクスチャとの合成色
 	};
 
 	//頂点情報
@@ -44,6 +44,7 @@ public:
 
 	//描画
 	//引数：worldMatrix　ワールド行列
+	void Draw(Transform& transform);
 	void Draw(Transform& transform, RECT rect, float alpha);
 
 	//解放

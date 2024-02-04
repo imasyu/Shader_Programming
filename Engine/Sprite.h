@@ -23,11 +23,11 @@ class Sprite
 		XMVECTOR uv;            //UV
 	};
 protected:
-	UINT64 vertexNum_;                 //頂点数
+	uint64_t vertexNum_;                 //頂点数
 	std::vector<VERTEX> vertices_;     //頂点情報
 	ID3D11Buffer* pVertexBuffer_;    //頂点バッファ
 
-	UINT64 indexNum;                 //インデックス数
+	uint64_t indexNum;                 //インデックス数
 	std::vector<int> index_;          //インデックス情報
 
 	ID3D11Buffer* pIndexBuffer_;          //インデックスバッファ
@@ -43,7 +43,7 @@ public:
 	HRESULT Initialize();
 
 	//描画
-	//引数：worldMatrix　ワールド行列
+	//引数：transform　トランスフォームクラスオブジェクト
 	void Draw(Transform& transform);
 	void Draw(Transform& transform, RECT rect, float alpha);
 

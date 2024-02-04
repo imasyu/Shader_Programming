@@ -94,7 +94,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 
 	//テクスチャ座標変換行列を渡す
 	XMMATRIX mTexTrans = XMMatrixTranslation((float)rect.left / (float)pTexture_->GetTextureSize().x, (float)rect.top / (float)pTexture_->GetTextureSize().y, 0.0f);
-	XMMATRIX mTexScale = XMMatrixTranslation((float)rect.right / (float)pTexture_->GetTextureSize().x, (float)rect.bottom / (float)pTexture_->GetTextureSize().y, 1.0f);
+	XMMATRIX mTexScale = XMMatrixScaling((float)rect.right / (float)pTexture_->GetTextureSize().x, (float)rect.bottom / (float)pTexture_->GetTextureSize().y, 1.0f);
 	XMMATRIX mTexel = mTexScale * mTexTrans;
 	cb.uvTrans = XMMatrixTranspose(mTexel);
 
@@ -138,23 +138,20 @@ HRESULT Sprite::Load(std::string fileName)
 {
 	if (FAILED(LoadTexture(fileName)))
 	{
-		if (FAILED(LoadTexture(fileName)))
-		{
-			return E_FAIL;
-		}
-		//頂点情報
-		InitVertexData();                     //データを用意して
-
-		//インデックス情報
-		InitIndexData();                      //データを用意して
-
-		//コンスタントバッファ作成
-		if (FAILED(CreateConstantBuffer()))
-		{
-			return E_FAIL;
-		}
-		return S_OK;
+		return E_FAIL;
 	}
+	//頂点情報
+	InitVertexData();                     //データを用意して
+
+	//インデックス情報
+	InitIndexData();                      //データを用意して
+
+	//コンスタントバッファ作成
+	if (FAILED(CreateConstantBuffer()))
+	{
+		return E_FAIL;
+	}
+	return S_OK;
 }
 
 //頂点情報の準備

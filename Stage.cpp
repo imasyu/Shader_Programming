@@ -4,7 +4,7 @@
 #include "Engine/Camera.h"
 
 namespace {
-    const XMFLOAT4 DEF_LIGHT_POSITION{1, 2, 1, 0};
+    const XMFLOAT4 DEF_LIGHT_POSITION{-2, 0, 0, 0};
 }
 
 void Stage::IntConstantBuffer()
@@ -36,7 +36,7 @@ void Stage::Initialize()
     //q = new Quad();
     //q->Initialize();
 
-    hModel_ = Model::Load("Assets/Dice2.fbx");
+    hModel_ = Model::Load("Assets/Water.fbx");
     assert(hModel_ >= 0);
 
     hBall_ = Model::Load("Assets/Ball.fbx");
@@ -59,15 +59,15 @@ void Stage::Initialize()
 
     trBall1_.position_ = { 1,1,2 };
     trBall1_.rotate_ = { 0,0,0 };
-    trBall1_.scale_ = { 0.2f, 0.2f,0.2f };
+    trBall1_.scale_ = { 0.4f, 0.4f,0.4f };
    
     trLight_.position_ = { 0,0,0 };
     trLight_.rotate_ = { 0,0,0 };
     trLight_.scale_ = { 0.4f,0.4f,0.4f };
     
-    trArrow1_.position_ = { 0,0,0 };
+    /*trArrow1_.position_ = { 0,0,0 };
     trArrow1_.rotate_ = { 90,90,0 };
-    trArrow1_.scale_ = { 0.5f,0.5f,0.5f };
+    trArrow1_.scale_ = { 0.5f,0.5f,0.5f };*/
 
     trArrow2_.position_ = { 2,-2,0 };
     trArrow2_.rotate_ = { 0,1,0 };
@@ -91,42 +91,42 @@ void Stage::Update()
     if (Input::IsKey(DIK_RIGHT))
     {
         XMFLOAT4 p = GetLightPos();
-        XMFLOAT4 margin{ p.x + 0.1f,p.y + 0.0f,p.z + 0.0f,p.w + 0.0f };
+        XMFLOAT4 margin{ p.x + 0.1f,p.y,p.z,p.w };
 
         SetLightPos(margin);
     }
     if (Input::IsKey(DIK_LEFT))
     {
         XMFLOAT4 p = GetLightPos();
-        XMFLOAT4 margin{ p.x - 0.1f,p.y - 0.0f,p.z - 0.0f,p.w - 0.0f };
+        XMFLOAT4 margin{ p.x - 0.1f,p.y,p.z,p.w };
 
         SetLightPos(margin);
     }
     if (Input::IsKey(DIK_UP))
     {
         XMFLOAT4 p = GetLightPos();
-        XMFLOAT4 margin{ p.x - 0.0f,p.y + 0.1f,p.z - 0.0f,p.w - 0.0f };
+        XMFLOAT4 margin{ p.x,p.y + 0.1f,p.z,p.w };
 
         SetLightPos(margin);
     }
     if (Input::IsKey(DIK_DOWN))
     {
         XMFLOAT4 p = GetLightPos();
-        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.1f,p.z - 0.0f,p.w - 0.0f };
+        XMFLOAT4 margin{ p.x,p.y - 0.1f,p.z,p.w };
 
         SetLightPos(margin);
     }
     if (Input::IsKey(DIK_W))
     {
         XMFLOAT4 p = GetLightPos();
-        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.0f,p.z + 0.1f, 0 };
+        XMFLOAT4 margin{ p.x,p.y,p.z + 0.1f,p.w };
 
         SetLightPos(margin);
     }
     if (Input::IsKey(DIK_S))
     {
         XMFLOAT4 p = GetLightPos();
-        XMFLOAT4 margin{ p.x - 0.0f,p.y - 0.0f,p.z - 0.1f, 0 };
+        XMFLOAT4 margin{ p.x,p.y,p.z - 0.1f, p.w };
 
         SetLightPos(margin);
     }
@@ -157,11 +157,11 @@ void Stage::Draw()
     Model::Draw(hLightBall_);
 
 
-    /*Model::SetTransform(hArrow_[0], trArrow1_);
-    Model::Draw(hArrow_[0]);
+    //Model::SetTransform(hArrow_[0], trArrow1_);
+    //Model::Draw(hArrow_[0]);
 
-    Model::SetTransform(hArrow_[1], trArrow2_);
-    Model::Draw(hArrow_[1]);*/
+    //Model::SetTransform(hArrow_[1], trArrow2_);
+    //Model::Draw(hArrow_[1]);
 
     Transform t;
     t.position_ = { 0,0,0 };

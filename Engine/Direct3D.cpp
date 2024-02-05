@@ -144,7 +144,7 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 	pDevice_->CreateBlendState(&BlendDesc, &pBlendState);
 
-	float blendFactor[4] = { D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
+	float blendFactor[4] = { D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
 	pContext_->OMSetBlendState(pBlendState, blendFactor, 0xffffffff);
 
 	//データを画面に描画するための一通りの設定（パイプライン）

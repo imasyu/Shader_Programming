@@ -36,7 +36,7 @@ void Stage::Initialize()
     //q = new Quad();
     //q->Initialize();
 
-    hModel_ = Model::Load("Assets/Ground.fbx");
+    hModel_ = Model::Load("Assets/Water.fbx");
     assert(hModel_ >= 0);
 
     hBall_ = Model::Load("Assets/Ball.fbx");
@@ -147,8 +147,8 @@ void Stage::Draw()
 {
     //q->Draw(transform_);
 
-    //Model::SetTransform(hModel_, transform_);
-    //Model::Draw(hModel_);
+    Model::SetTransform(hModel_, transform_);
+    Model::Draw(hModel_);
 
     Model::SetTransform(hBall_, trBall_);
     Model::Draw(hBall_);
@@ -168,7 +168,7 @@ void Stage::Draw()
     t.scale_ = { 1.0,1.0,1.0 };
     t.rotate_ = { 0,0,0 };
     RECT rec{ 0,0,300,300 };
-    sprite_->Draw(t, rec, 0.5f);
+    //sprite_->Draw(t, rec, 0.5f);
 }
 
 void Stage::Release()

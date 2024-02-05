@@ -53,7 +53,7 @@ void Stage::Initialize()
 
     Camera::SetPosition(XMVECTOR{ 0, 1, -15, 0 });
     Camera::SetTarget(XMVECTOR{ 0, 1, -10, 0 });
-    trBall_.position_ = { 0,0,1.5f };
+    trBall_.position_ = { 0,-4,8 };
     trBall_.rotate_ = { 0,0,0 };
     //trBall_.scale_ = { 0.4,0.4,0.4 };
 

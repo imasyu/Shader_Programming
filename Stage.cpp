@@ -36,7 +36,7 @@ void Stage::Initialize()
     //q = new Quad();
     //q->Initialize();
 
-    hModel_ = Model::Load("Assets/Water.fbx");
+    hModel_ = Model::Load("Assets/Dice2.fbx");
     assert(hModel_ >= 0);
 
     hBall_ = Model::Load("Assets/Ball.fbx");
@@ -53,7 +53,7 @@ void Stage::Initialize()
 
     Camera::SetPosition(XMVECTOR{ 0, 1, -15, 0 });
     Camera::SetTarget(XMVECTOR{ 0, 1, -10, 0 });
-    trBall_.position_ = { 0,2,0 };
+    trBall_.position_ = { 0,0,1.5f };
     trBall_.rotate_ = { 0,0,0 };
     //trBall_.scale_ = { 0.4,0.4,0.4 };
 
@@ -82,7 +82,7 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-    //trBall_.rotate_.y += 0.5f;
+    trBall_.rotate_.y += 0.5f;
 
     if (Input::IsKeyUp(DIK_SPACE))
     {

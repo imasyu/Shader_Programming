@@ -55,7 +55,7 @@ void Quad::Draw(Transform& transform)
 	SetBufferToPipeline();
 
 	//•`‰æ
-	Direct3D::pContext_->DrawIndexed(index_.size(), 0, 0);
+	Direct3D::pContext_->DrawIndexed(index_.size(), (UINT)0, 0);
 
 
 

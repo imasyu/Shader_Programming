@@ -13,6 +13,7 @@ cbuffer global
 	matrix g_matWorld;			//頂点座標変換行列
     matrix g_matTexture;        //テクスチャ座標変換行列
     float4 g_vecColor;          //テクスチャ合成色
+	float  g_scroll;            //スクロール量の変数
 };
 
 //───────────────────────────────────────
@@ -47,6 +48,8 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
 float4 PS(VS_OUT inData) : SV_Target
 {
 	float4 output;
+    float2 tmpUV = inData.uv.x;
+	tmpUV.x = tmpUV.x + g_scroll;
     output = g_vecColor * g_texture.Sample(g_sampler, inData.uv);
     return output;
 	//return float4(1, 0, 0, 0);

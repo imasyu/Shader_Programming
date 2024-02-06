@@ -49,7 +49,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//スクリーン座標に変換し、ピクセルシェーダーへ
 	outData.pos = mul(pos, matWVP);
 	//outData.pos = pos;
-    outData.uv = (float)uv;
+    outData.uv = (float2)uv;
 	normal.w = 0;
 	normal = mul(normal, matNormal);
 	normal = normalize(normal);

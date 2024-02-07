@@ -50,7 +50,7 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 output;
     float2 tmpUV = inData.uv.x;
 	tmpUV.x = tmpUV.x + g_scroll;
-    output = g_vecColor * g_texture.Sample(g_sampler, inData.uv);
+    output = g_vecColor * g_texture.Sample(g_sampler, tmpUV);
     return output;
 	//return float4(1, 0, 0, 0);
 

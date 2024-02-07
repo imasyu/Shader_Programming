@@ -290,7 +290,7 @@ HRESULT Direct3D::InitShader3D()
 
 	//ラスタライザ作成
 	D3D11_RASTERIZER_DESC rdc = {};
-	rdc.CullMode = D3D11_CULL_BACK;
+	rdc.CullMode = D3D11_CULL_NONE;
 	rdc.FillMode = D3D11_FILL_SOLID;
 	rdc.FrontCounterClockwise = FALSE;
 	rdc.ScissorEnable = false;
@@ -330,7 +330,7 @@ HRESULT Direct3D::InitShader2D()
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
 	};
-	hr = pDevice_->CreateInputLayout(layout.data(), layout.size(),
+	hr = pDevice_->CreateInputLayout(layout.data(), (UINT)layout.size(),
 		pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_2D].pVertexLayout_));
 	if (FAILED(hr))
 	{

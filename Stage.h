@@ -15,7 +15,7 @@ class Stage : public GameObject
 	int hBall_;
 	int hArrow_[2];
 	int hLightBall_;
-	//Transform trGround_;
+	Transform trGround_;
 	Transform trBall_;
 	Transform trBall1_;
 	Transform trArrow1_;

@@ -43,6 +43,7 @@ class Fbx
 		FLOAT       shininess;
 		BOOL        hasTexture;
 		BOOL        hasNormalMap;
+		float       scroll;
 	};
 
 	struct VERTEX
@@ -67,6 +68,10 @@ class Fbx
 	void InitIndex(fbxsdk::FbxMesh* mesh);
 	void IntConstantBuffer();
 	void InitMaterial(fbxsdk::FbxNode* pNode);
+	bool IsFloatColor_;
+	XMFLOAT4 dColor_;
+	XMFLOAT4 lightSourcePosition_;
+	float scrollVal_;
 	RENDER_STATE state_;
 public:
 

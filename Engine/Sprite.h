@@ -14,7 +14,6 @@ class Sprite
 		XMMATRIX    world;     //頂点座標変換行列
 		XMMATRIX    uvTrans;   //テクスチャ座標変換行列
 		XMFLOAT4    color;     //テクスチャとの合成色
-		float scroll;
 	};
 
 	//頂点情報
@@ -60,7 +59,7 @@ public:
 	//戻値：成功/失敗
 	HRESULT Load(std::string fileName);
 
-	float scrollVal;
+
 
 private:
 	//---------Initiallizeから呼ばれる関数---------

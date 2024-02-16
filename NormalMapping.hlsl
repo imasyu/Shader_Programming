@@ -20,6 +20,7 @@ cbuffer gmodel:register(b0)
 	float       shininess;           //ハイライトの広がりの大きさ
 	int         hasTexture;           //テクスチャ貼ってあるかどうか
 	int         hasNormalMap;      //ノーマルマップがあるかどうか
+    float       scroll;
 };
 
 cbuffer gmodel:register(b1)
@@ -98,11 +99,13 @@ float4 PS(VS_OUT inData) : SV_Target
 	float4 lightSource = float4(1.0, 1.0, 1.0, 1.0);  //ライトの色&明るさ　lin
 	float4 diffuse;
 	float4 ambient;
-	float4 specular;
+	
+    float2 tmpNormalUV = inData.uv;
+    tmpNormalUV.x = tmpNormalUV.x + scroll;
 
 	if (hasNormalMap)
 	{
-		float4 tmpNormal = normalTex.Sample(g_sampler, inData.uv) * 2.0f - 1.0f;
+		float4 tmpNormal = normalTex.Sample(g_sampler, tmpNormalUV) * 2.0f - 1.0f;
 
 		tmpNormal = normalize(tmpNormal);
 		tmpNormal.w = 0;

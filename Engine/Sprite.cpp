@@ -9,7 +9,7 @@ Sprite::Sprite() :
 	vertexNum_(0), pVertexBuffer_(nullptr),
 	indexNum(0), pIndexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
-	pTexture_(nullptr), scrollVal(0)
+	pTexture_(nullptr)
 {
 }
 
@@ -63,7 +63,6 @@ void Sprite::Draw(Transform& transform)
 //描画
 void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 {
-	scrollVal = scrollVal + 0.001f;
 	//いろいろ設定
 	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
 	UINT stride = sizeof(VERTEX);
@@ -101,7 +100,6 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 
 	//テクスチャ合成色情報を渡す
 	cb.color = XMFLOAT4(1, 1, 1, alpha);
-	cb.scroll = scrollVal;
 
 	Direct3D::pContext_->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);   //GPUからのリソースアクセスを一時止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));    //リソースへ値を送る
@@ -117,7 +115,7 @@ void Sprite::Draw(Transform& transform, RECT rect, float alpha)
 	SetBufferToPipeline();
 
 	//ポリゴンメッシュを描画する
-	Direct3D::pContext_->DrawIndexed(indexNum, 0, 0);
+	Direct3D::pContext_->DrawIndexed((UINT)indexNum, (UINT)0, (UINT)0);
 
 	Direct3D::SetShader(SHADER_TYPE::SHADER_3D);
 
